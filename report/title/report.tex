@@ -1,0 +1,21 @@
+\NewDocumentCommand\MakeReportTitle{m}{
+  {\Large\textbf{\textit{\TypesetField{author.name}{#1}}}}
+  \vskip 2em
+  {\Huge
+	\TypesetField{report.title}{#1}
+  }
+  \vskip 1em
+  {\large
+	\TypesetReportType{#1}\\
+	\TypesetReportKind{#1}
+  }\\
+  {\normalsize\raggedleft
+	\vskip 5em
+	\TypesetScientificSupervisor{#1}
+	\IfBoolFlagT{\IsFieldGiven{consultant.name}{#1}}{
+	  \vskip 1em
+	  \TypesetConsultant{#1}
+	}
+  }
+}
+

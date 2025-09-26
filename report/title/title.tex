@@ -1,0 +1,49 @@
+\input{title/pretitle.tex}
+
+\NewDocumentCommand\MakeFullTitle{m}
+{
+	\title{\TypesetField{report.title}{#1}}
+    \begin{titlepage}%
+        \newgeometry{top=20mm,bottom=20mm,left=20mm,right=15mm,nohead,includeheadfoot}
+		\thispagestyle{\IfBoolFlagTF{\IsLangRU{#1}}{rutitle}{entitle}}
+
+        \begin{center}
+            \vspace*{0.25\textheight}
+			\IfBoolFlagT{\IsReport}{\MakeReportTitle{#1}}
+			\IfBoolFlagT{\IsThesis}{\MakeThesisTitle{#1}}
+        \end{center}
+    \end{titlepage}
+}
+
+%% Титульный лист генерируется, если для соответствующего языка
+%% определен аргумент title
+%% Счетчик страниц автоматически увеличивается при генерации титульнго листа
+\renewcommand\maketitle{
+  %% На титульной странице все кроме полей соответствует \documentclass[12pt]{article}
+  \SetupTitlePage
+
+  \newcounter{titlepages}
+  \setcounter{titlepages}{1}
+  \begin{spacing}{1.0}
+	\IfBoolFlagT{\IsFieldGiven{report.title}{ru}}{
+	  % fancyhdr set height of the top/bottom headers automatically
+	  % so set them to zero to be sure that he does it
+	  \setlength{\headheight}{0pt}
+	  \setlength{\footskip}{0pt}
+	  \MakeFullTitle{ru}\addtocounter{titlepages}{1}
+	}
+	\IfBoolFlagT{\IsFieldGiven{report.title}{en}}{
+	  % fancyhdr already set height of the top/bottom headers on the previous page (titleru)
+	  % but on this page the headers' height might be different
+	  % so set them to zero again in order to make fancyhdr to do it
+	  \setlength{\headheight}{0pt}
+	  \setlength{\footskip}{0pt}
+	  \MakeFullTitle{en}\addtocounter{titlepages}{1}
+	}
+  \end{spacing}
+  \setcounter{page}{\value{titlepages}}
+  % restore preamble's geometry
+
+  \SetupBodyPage
+  \newgeometry{top=20mm,bottom=20mm,left=30mm,right=15mm,nohead,includeheadfoot}
+}

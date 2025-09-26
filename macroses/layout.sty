@@ -1,0 +1,149 @@
+\ProvidesPackage{configuration/layout}
+
+%%%%%%%%%%%%%%%%%
+%% Page layout %%
+%%%%%%%%%%%%%%%%%
+\RequirePackage{fancyhdr} % Настройка колонтиутулов 
+\RequirePackage{multicol} % Текст в несколько колонок
+\setlength{\columnsep}{1cm}
+
+\RequirePackage{stackengine} % Вертикальные стеки из box-ов
+\RequirePackage{enumitem} % Списки
+\RequirePackage{rotating} % Повороты страницы
+
+\renewcommand*{\thefootnote}{\arabic{footnote}} % Сноски нумеруются (арабскими) цифрами
+\renewcommand*{\emph}[1]{\textit{#1}} % Выделенение текста --- курсивом
+\RequirePackage{geometry} % Настройка страницы
+\geometry{%
+  a4paper,
+  margin=1cm,
+  includefoot,
+  includehead
+}
+
+%%%%%%%%%%%%
+%% Разное %%
+%%%%%%%%%%%%
+\RequirePackage{afterpage} % Выполнение команд после разрыва страниц
+\RequirePackage{pdflscape} % Правильное отображение альбомной страницы в pdf файле
+\RequirePackage{microtype} % Полезные типографические ништячки, по-хорошему требует LuaLaTeX
+\RequirePackage[normalem]{ulem} % Дополнительные варианты форматирования текста, например подчеркивание или зачеркивание
+\RequirePackage[autostyle]{csquotes} % Правильные кавычки в зависимости от языка
+\RequirePackage[useregional]{datetime2} % Форматирование дат
+
+\newcommand{\ie}{т{.}~e{.}}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%% TYPESETTING THEOREMS %%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\RequirePackage{amsthm}
+\makeatletter
+    \def\renewtheorem#1{%
+    \expandafter\let\csname#1\endcsname\relax
+    \expandafter\let\csname c@#1\endcsname\relax
+    \gdef\renewtheorem@envname{#1}
+    \renewtheorem@secpar
+    }
+    \def\renewtheorem@secpar{\@ifnextchar[{\renewtheorem@numberedlike}{\renewtheorem@nonumberedlike}}
+    \def\renewtheorem@numberedlike[#1]#2{\newtheorem{\renewtheorem@envname}[#1]{#2}}
+    \def\renewtheorem@nonumberedlike#1{  
+    \def\renewtheorem@caption{#1}
+    \edef\renewtheorem@nowithin{\noexpand\newtheorem{\renewtheorem@envname}{\renewtheorem@caption}}
+    \renewtheorem@thirdpar
+    }
+    \def\renewtheorem@thirdpar{\@ifnextchar[{\renewtheorem@within}{\renewtheorem@nowithin}}
+    \def\renewtheorem@within[#1]{\renewtheorem@nowithin[#1]}
+\makeatother
+
+
+% Convention for theorems.
+% {Theorem} --- framed theorem
+% {theorem} --- non-framed theorem
+% {Theorem*} --- framed theorem without numbering
+% {theorem*} --- non-framed theorem without numbering
+
+\RequirePackage{mdframed}
+\NewDocumentCommand{\framesetup}{m}{
+    \IfNoValueTF{#1}{
+        \mdfsetup{innertopmargin=-3pt,linecolor=black,%
+              linewidth=1pt,topline=true, frametitleaboveskip=\dimexpr-\ht\strutbox\relax,}
+    }{
+        \mdfsetup{frametitle={%
+            \tikz[baseline=(current bounding box.east),outer sep=0pt]
+            \node[anchor=east,rectangle,fill=white]{\strut #1};}}
+        \mdfsetup{innertopmargin=-10pt,linecolor=black,%
+              linewidth=1pt,topline=true, frametitleaboveskip=\dimexpr-\ht\strutbox\relax,}
+    }
+}
+
+\NewDocumentCommand{\MakeFramedTheorem}{mm}{
+    \NewDocumentEnvironment{#1}{o}
+        {\framesetup{##1}\begin{mdframed}\begin{#2}}
+        {\end{#2}\end{mdframed}}
+}
+
+\ExplSyntaxOn
+\tl_new:N\l_env_name_tl
+\tl_new:N\l_framed_env_name_tl
+
+\NewDocumentCommand{\NewDocumentTheorem}{md[]md[]}{
+  \tl_set:Nn\l_env_name_tl{#1}
+  \tl_set:Nx\l_framed_env_name_tl{\str_uppercase:f{\tl_head:N\l_env_name_tl}\tl_tail:N\l_env_name_tl}
+  \IfNoValueTF{#2}{
+    \IfNoValueTF{#4}{
+      \newtheorem{\tl_use:N\l_env_name_tl}{#3}
+      \newtheorem*{\tl_use:N\l_env_name_tl*}{#3}
+    }{
+      \newtheorem{\tl_use:N\l_env_name_tl}{#3}[#4]
+      \newtheorem*{\tl_use:N\l_env_name_tl*}{#3}
+    }
+  }{
+    \IfNoValueTF{#4}{
+      \newtheorem{\tl_use:N\l_env_name_tl}[#2]{#3}
+      \newtheorem*{\tl_use:N\l_env_name_tl*}{#3}
+    }{
+        \PackageError{layout}{You can not use both counter and other theorem ref in definition}
+    }
+  }
+  \exp_args:Nxx\MakeFramedTheorem{\tl_use:N\l_framed_env_name_tl}{\tl_use:N\l_env_name_tl}
+  \exp_args:Nxx\MakeFramedTheorem{\tl_use:N\l_framed_env_name_tl*}{\tl_use:N\l_env_name_tl*}
+
+}
+\ExplSyntaxOff
+
+\theoremstyle{plain}
+\NewDocumentTheorem{theorem}{Теорема}[subsection]
+\NewDocumentTheorem{corollary}[theorem]{Следствие}
+\NewDocumentTheorem{lemma}[theorem]{Лемма}
+\NewDocumentTheorem{proposition}[theorem]{Предложение}
+\NewDocumentTheorem{axiom}{Аксиома}
+
+\theoremstyle{definition}
+\NewDocumentTheorem{definition}[theorem]{Определение}
+\NewDocumentTheorem{remark}[theorem]{Замечение}
+
+
+%%%% Strange environments
+\theoremstyle{definition}
+\newtheorem{?}{Задача}
+\newtheorem{example}[?]{Пример}
+\newtheorem*{notation}{Нотация}
+
+\makeatletter
+\renewenvironment{proof}[1][\text{Доказательство} \\]{
+  \par
+  \pushQED{\qed}%
+  \normalfont
+  \topsep0pt \partopsep3pt
+  \trivlist
+  \item[\hskip\labelsep
+        \itshape
+        #1\@addpunct{.}]\ignorespaces
+}{
+  \popQED\endtrivlist\@endpefalse
+  \addvspace{6pt plus 6pt} % some space after
+}
+\makeatother

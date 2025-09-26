@@ -1,0 +1,35 @@
+
+\fancypagestyle{entitle}{
+	\fancyhf{}  % clear all header and footer fields
+	\renewcommand{\headrulewidth}{0pt}  % remove head ruler
+	% В верхнем колонтитуле будет университет, кафедра и группа, если это курсовая/практика, или просто университет для ВКР
+	\chead{\large
+		Saint Petersburg State University
+		\vskip 1em
+		\IfBoolFlagF{\IsThesis}{
+		  {\large \TypesetField{supervisor.chair}{en}}
+			\vskip 1em
+				{\large Group \TypesetField{author.group}{en}}
+		}
+	}
+	% В нижнем колонтитуле город и год
+	\cfoot{\large\parbox[b]{\textwidth}{\centering Saint-Petersburg\\ \TypesetField{year}{en}}}
+}
+
+\fancypagestyle{rutitle}{
+	\fancyhf{}  % clear all header and footer fields
+	\renewcommand{\headrulewidth}{0pt}  % remove head ruler
+	% В верхнем колонтитуле будет университет, кафедра и группа, если это курсовая/практика, или просто университет для ВКР
+	\chead{\large
+		Санкт-Петербургский государственный университет
+		\vskip 1em
+		\IfBoolFlagF{\IsThesis}{
+		  {\large \TypesetField{supervisor.chair}{ru}}
+			\vskip 1em
+				{\large Группа \TypesetField{author.group}{ru}}
+		}
+	}
+	% В нижнем колонтитуле город и год
+	\cfoot{\large\parbox[b]{\textwidth}{\centering Санкт-Петербург\\ \TypesetField{year}{ru}}}
+}
+

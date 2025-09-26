@@ -1,0 +1,61 @@
+\RequirePackage{xparse}
+\RequirePackage{fancyhdr}
+\RequirePackage[a4paper]{geometry}
+\RequirePackage[nodisplayskipstretch]{setspace}
+
+
+% Hack: IfBooleanTF-like commands do not expand
+% their argument. Let's  define appropriate variants
+% of them
+\ExplSyntaxOn
+\NewDocumentCommand\IfBoolFlagT{mm}{
+  \exp_args:Nf\IfBooleanT{#1}{#2}
+}
+\NewDocumentCommand\IfBoolFlagF{mm}{
+  \exp_args:Nf\IfBooleanF{#1}{#2}
+}
+\NewDocumentCommand\IfBoolFlagTF{mmm}{
+  \exp_args:Nf\IfBooleanTF{#1}{#2}{#3}
+}
+
+\cs_if_exist:NTF\SetupTitlePage{}{\NewDocumentCommand\SetupTitlePage{}{}}
+\cs_if_exist:NTF\SetupBodyPage{}{\NewDocumentCommand\SetupBodyPage{}{}}
+\ExplSyntaxOff
+
+
+
+\NewDocumentCommand\IsLangRU{m}{\directlua{tex.sprint(configuration.is_lang_ru('#1'))}}
+\NewDocumentCommand\IsThesis{}{\directlua{tex.sprint(configuration.is_thesis)}}
+\NewDocumentCommand\IsReport{}{\directlua{tex.sprint(configuration.is_report)}}
+
+\NewDocumentCommand\IsFieldGiven{mm}{\directlua{tex.sprint(configuration.is_field_given('#1.#2'))}}
+\NewDocumentCommand\TypesetField{mm}{\directlua{tex.sprint(configuration.typeset('#1.#2'))}}
+
+\NewDocumentCommand\TypesetScientificSupervisor{m}{
+  \IfBoolFlagTF{\IsLangRU{#1}}{Научный руководитель}{Scientific supervisor}:\\
+  \TypesetField{supervisor.position}{#1}\ \TypesetField{supervisor.name}{#1}\\
+}
+
+\NewDocumentCommand\TypesetConsultant{m}{
+  \IfBoolFlagTF{\IsLangRU{#1}}{Консультант}{Consultant}:\\
+  \TypesetField{consultant.position}{#1}\ \TypesetField{consultant.name}{#1}\\
+}
+
+\NewDocumentCommand\TypesetReviewer{m}{
+  \IfBoolFlagTF{\IsLangRU{#1}}{Рецензент}{Reviewer}:\\
+  \TypesetField{reviewer.position}{#1}\ \TypesetField{reviewer.name}{#1}\\
+}
+
+
+%% Report
+\NewDocumentCommand\TypesetReportType{m}{
+  \TypesetField{report.type.repr}{#1}
+}
+
+\NewDocumentCommand\TypesetReportKind{m}{
+  \TypesetField{report.kind.repr}{#1}
+}
+
+\input{title/styles.tex}
+\input{title/report.tex}
+\input{title/thesis.tex}
