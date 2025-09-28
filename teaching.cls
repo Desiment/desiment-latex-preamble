@@ -62,7 +62,7 @@
 
 
 \RequirePackage{macroses/mathematics/mathematics}
-\RequirePackage{macroses/mathematics/floats}
+\RequirePackage{macroses/floats/floats}
 
 
 
