@@ -48,6 +48,9 @@
 \RequirePackage{macroses/typesetting}
 \RequirePackage{macroses/floats}
 
+\theoremstyle{definition}
+\newtheorem{?}{Задача}
+
 % Доступ к полям комманд \author{...} и \date{...}
 \title{Unknown} % Инициализируем \@title и \@date
 \date{Unknown}  % чтобы \edef работал корректно
@@ -62,7 +65,7 @@
 \newcommand{\PracticeCourse}{\directlua{tex.sprint(records.course)}}
 \newcommand{\PracticeUni}{\directlua{tex.sprint(records.uni)}}
 
-
+\RequirePackage{fancyhdr}
 \RequirePackage{ifthen}
 
 
