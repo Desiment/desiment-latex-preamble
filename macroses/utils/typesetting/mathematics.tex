@@ -1,44 +1,3 @@
-\ProvidesPackage{configuration/layout}
-
-%%%%%%%%%%%%%%%%%
-%% Page layout %%
-%%%%%%%%%%%%%%%%%
-\RequirePackage{fancyhdr} % Настройка колонтиутулов 
-\RequirePackage{multicol} % Текст в несколько колонок
-\setlength{\columnsep}{1cm}
-
-\RequirePackage{stackengine} % Вертикальные стеки из box-ов
-\RequirePackage{enumitem} % Списки
-\RequirePackage{rotating} % Повороты страницы
-
-\renewcommand*{\thefootnote}{\arabic{footnote}} % Сноски нумеруются (арабскими) цифрами
-\renewcommand*{\emph}[1]{\textit{#1}} % Выделенение текста --- курсивом
-\RequirePackage{geometry} % Настройка страницы
-\geometry{%
-  a4paper,
-  margin=1cm,
-  includefoot,
-  includehead
-}
-
-%%%%%%%%%%%%
-%% Разное %%
-%%%%%%%%%%%%
-\RequirePackage{afterpage} % Выполнение команд после разрыва страниц
-\RequirePackage{pdflscape} % Правильное отображение альбомной страницы в pdf файле
-\RequirePackage{microtype} % Полезные типографические ништячки, по-хорошему требует LuaLaTeX
-\RequirePackage[normalem]{ulem} % Дополнительные варианты форматирования текста, например подчеркивание или зачеркивание
-\RequirePackage[autostyle]{csquotes} % Правильные кавычки в зависимости от языка
-\RequirePackage[useregional]{datetime2} % Форматирование дат
-
-\newcommand{\ie}{т{.}~e{.}}
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%% TYPESETTING THEOREMS %%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 \RequirePackage{amsthm}
 \makeatletter
     \def\renewtheorem#1{%
@@ -49,7 +8,7 @@
     }
     \def\renewtheorem@secpar{\@ifnextchar[{\renewtheorem@numberedlike}{\renewtheorem@nonumberedlike}}
     \def\renewtheorem@numberedlike[#1]#2{\newtheorem{\renewtheorem@envname}[#1]{#2}}
-    \def\renewtheorem@nonumberedlike#1{  
+    \def\renewtheorem@nonumberedlike#1{
     \def\renewtheorem@caption{#1}
     \edef\renewtheorem@nowithin{\noexpand\newtheorem{\renewtheorem@envname}{\renewtheorem@caption}}
     \renewtheorem@thirdpar
@@ -128,22 +87,5 @@
 
 %%%% Strange environments
 \theoremstyle{definition}
-\newtheorem{?}{Задача}
-\newtheorem{example}[?]{Пример}
+\newtheorem*{example}{Пример}
 \newtheorem*{notation}{Нотация}
-
-\makeatletter
-\renewenvironment{proof}[1][\text{Доказательство} \\]{
-  \par
-  \pushQED{\qed}%
-  \normalfont
-  \topsep0pt \partopsep3pt
-  \trivlist
-  \item[\hskip\labelsep
-        \itshape
-        #1\@addpunct{.}]\ignorespaces
-}{
-  \popQED\endtrivlist\@endpefalse
-  \addvspace{6pt plus 6pt} % some space after
-}
-\makeatother

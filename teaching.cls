@@ -30,7 +30,6 @@
     \rhead{Дедлайн: \HomeworkDeadline}%
   }
 }
-
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{article}}
 \ProcessOptions\relax
 \LoadClass[a4paper]{article}
@@ -44,7 +43,13 @@
 }
 
 \input{preamble.tex}
+\RequirePackage{macroses/references}
+\RequirePackage{macroses/mathematics}
+\RequirePackage{macroses/typesetting}
+\RequirePackage{macroses/floats}
 
+\theoremstyle{definition}
+\newtheorem{?}{Задача}
 
 % Доступ к полям комманд \author{...} и \date{...}
 \title{Unknown} % Инициализируем \@title и \@date
@@ -60,27 +65,10 @@
 \newcommand{\PracticeCourse}{\directlua{tex.sprint(records.course)}}
 \newcommand{\PracticeUni}{\directlua{tex.sprint(records.uni)}}
 
-
-\RequirePackage{macroses/mathematics/mathematics}
-\RequirePackage{macroses/floats/floats}
-
-
-
-
-\RequirePackage{amsthm}
-\theoremstyle{definition}
-\newtheorem{?}{Задача}
-\newtheorem{example}[?]{Пример}
-\newtheorem*{notation}{Нотация}
-
-\RequirePackage{hyperref}
-\RequirePackage{ifthen}
 \RequirePackage{fancyhdr}
-\RequirePackage{enumitem}
+\RequirePackage{ifthen}
 
 
-
-%\mmzset{memo dir = images/cache/\jobname}
 
 \newcounter{boxlblcounter}
 \newcommand{\task}[1]{\fbox{\begin{minipage}{4em}\centering\it #1\end{minipage}}}

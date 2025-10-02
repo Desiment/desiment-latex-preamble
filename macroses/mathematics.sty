@@ -1,20 +1,13 @@
-\ProvidesPackage{macroses/mathematics}
+\ProvidesPackage{macroses/mathematics}[2025/09/13 Utilities for typsetting formulas]
 
-% Generic interfaces
-\RequirePackage{mathcommand}
-\RequirePackage{mathtools}  
 % AMS packages
 \RequirePackage{amsmath}
 \RequirePackage{amsfonts}
 \RequirePackage{amssymb}
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%      FONTS      %%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
+% Generic interfaces
+\RequirePackage{mathcommand}
+\RequirePackage{mathtools}  
+% Fonts
 \RequirePackage{upgreek}
 \RequirePackage{dsfont}
 \RequirePackage{euscript}
@@ -63,9 +56,6 @@
 %%%%
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%     PATCHES     %%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % patch for diffuclt opearator limits, etc
 \RequirePackage{stackrel}   
@@ -78,7 +68,6 @@
 \RequirePackage{mleftright} 
 % patch for vector arrows
 \RequirePackage[d]{esvect}  
-
 
 %% mathtools default behaviour is that *-command use auto-scaling
 %% while non-* do not. Here we switch behaviour
@@ -105,9 +94,9 @@
 
 %% Force usage of \leqslant and \geqslant instead of
 %% \leq and \geq
-\disablecommand{\leq\geq}
-\suggestcommand{\leq}{Use the better looking \leqslant.}
-\suggestcommand{\geq}{Use the better looking \geqslant.}
+%\disablecommand{\leq\geq}
+%\suggestcommand{\leq}{Use the better looking \leqslant.}
+%\suggestcommand{\geq}{Use the better looking \geqslant.}
 
 
 %%%% Introduce some commons  
@@ -219,8 +208,8 @@
 %% Math commands %%
 %%%%%%%%%%%%%%%%%%%
 
-\input{configuration/macroses/mathematics/algebra}
-\input{configuration/macroses/mathematics/calculus}
-\input{configuration/macroses/mathematics/combinatorics}
-\input{configuration/macroses/mathematics/foundations}
-\input{configuration/macroses/mathematics/probability}
+\input{macroses/utils/mathematics/algebra}
+\input{macroses/utils/mathematics/calculus}
+\input{macroses/utils/mathematics/combinatorics}
+\input{macroses/utils/mathematics/foundations}
+\input{macroses/utils/mathematics/probability}
