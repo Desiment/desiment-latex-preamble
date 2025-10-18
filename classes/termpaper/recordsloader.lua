@@ -1,9 +1,5 @@
 local M = {}
 
--- Constants
-local LATEX_BOOL_TRUE = [[\noexpand\BooleanTrue]]
-local LATEX_BOOL_FALSE = [[\noexpand\BooleanFalse]]
-
 -- Local helper functions
 local function split_field(field_path)
     local results = {}
@@ -24,13 +20,6 @@ local function deep_get(t, keys)
     return value
 end
 
-local function choice(condition, a, b)
-  if condition then
-	return a
-  else
-	return b
-  end
-end
 -- Report type and kind representations
 local TYPE_REPR = {
     production = {ru = [[Отчёт по производственной практике]], en = [[Internship report]]},
@@ -60,17 +49,24 @@ end
 function M.is_field_given(field_path)
     local keys = split_field(field_path)
     local value = deep_get(M.records, keys)
-    return choice(value, LATEX_BOOL_TRUE, LATEX_BOOL_FALSE)
+	if value then
+	  return true
+	end
+	return false
 end
 
 function M.is_lang_ru(lang_code)
-    return choice((lang_code == 'ru'), LATEX_BOOL_TRUE, LATEX_BOOL_FALSE)
+    return lang_code == 'ru'
 end
 
-function M.load()
-    -- Load configuration file
-    local ok, records = pcall(dofile, "records.lua")
-    if not ok then
+function M.load(path_to_records)
+    -- Load configuration file (if not given --- load template)
+	if path_to_records == nil then
+	  path_to_records = "classes/termpaper/template.lua"
+	end
+
+    local loaded, records = pcall(require, path_to_records)
+    if not loaded then
         error("Failed to load records.lua: " .. tostring(records))
     end
     
@@ -79,11 +75,8 @@ function M.load()
     -- Extract and process report metadata
     local report_type = M.records.report.type
     local report_kind = M.records.report.kind
-    local is_thesis = (report_type == 'thesis')
-    
-    -- Set boolean flags for LaTeX
-    M.is_thesis = choice(is_thesis, LATEX_BOOL_TRUE, LATEX_BOOL_FALSE)
-    M.is_report = choice(not is_thesis, LATEX_BOOL_TRUE, LATEX_BOOL_FALSE)
+    M.is_thesis = (report_type == 'thesis')
+    M.is_report = not M.is_thesis 
     
     -- Process report type and kind representations
     M.records.report.type = {
@@ -96,7 +89,7 @@ function M.load()
         repr = {}
     }
     
-    if is_thesis then
+    if M.is_thesis then
         local is_masters = (report_kind == 'master')
         M.records.report.type.repr.en = choice(is_masters, [[Master's thesis]], [[Bachelor's thesis]])
         M.records.report.kind.repr = KIND_REPR[choice(is_masters, 'master', 'bachelor')] or {}

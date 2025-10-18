@@ -1,0 +1,69 @@
+-- macroses/lua/refloader.lua
+
+local ReferencesModuleLoader = {}
+
+function ReferencesModuleLoader.build_hypersetup_options(hyperconf)
+    local options = {}
+
+    for key, value in pairs(hyperconf.hypersetup) do
+        if type(value) == "boolean" then
+            if value then
+                table.insert(options, key)
+            end
+        elseif type(value) == "table" then
+            -- Handle table values (like pdfauthor, pdfkeywords)
+            if key == "pdfauthor" or
+			   key == "pdfkeywords" or
+			   key == "pdfsubject" or
+			   key == "pdftitle" 
+			   then
+				table.insert(options, key .. "={" .. table.concat(value, ", ") .. "}")
+            else
+                error("hypersetup: unknown key " .. key) 
+            end
+        else
+            table.insert(options, key .. "=" .. tostring(value))
+        end
+    end
+
+    --print("-------------------------")
+    --print(table.concat(options, ","))
+    --print("-------------------------")
+    return table.concat(options, ", ")
+end
+
+function ReferencesModuleLoader.create_ref_commands(hyperconf)
+    local result = {}
+    local shortref_conf = hyperconf.shortref
+
+    for _, ref_config in ipairs(shortref_conf) do
+        local csname = ref_config.csname
+        local reftext = ref_config.reftext
+
+        if csname and reftext then
+            -- Create lowercase version (e.g., \picref)
+            table.insert(result, string.format("\\NewDocumentCommand\\%s{m}{%s~\\ref{#1}}",
+                        csname, reftext))
+
+            -- Create capitalized version (e.g., \Picref)
+            local capitalized_csname = csname:sub(1,1):upper() .. csname:sub(2)
+            table.insert(result, string.format("\\NewDocumentCommand\\%s{m}{\\MakeUppercase %s~\\ref{#1}}",
+                        capitalized_csname, reftext))
+        end
+    end
+
+    return result
+end
+
+function ReferencesModuleLoader.hyperrefsetup(configuration)
+  hyperconf = configuration.references.hyperref;
+  options = ReferencesModuleLoader.build_hypersetup_options(hyperconf);
+  tex.sprint('\\hypersetup{' .. options .. '}')
+  for _, v in ipairs(ReferencesModuleLoader.create_ref_commands(hyperconf)) do
+	print(v)
+	print('-----------------')
+	tex.sprint(v)
+  end;
+end
+
+return ReferencesModuleLoader

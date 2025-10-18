@@ -1,14 +1,51 @@
-\ProvidesPackage{macroses/typesetting}[2025/09/13 Utilities for typesetting text]
+\ProvidesPackage{macroses/typesetting}[2025/09/13 Bundle for typesetting text]
+
+%%% If not using dploader then macro definitions will be loaded immediately
+%%% WARN: this may break some knowledge-related stuff. In such case one should
+%%%       load knowledge (and hyperref) FIRST. This can be bad, although afaik
+%%%       a lot of work had been done, to make LaTeX less sensitive to package
+%%%       loading order
+\ProvideDocumentCommand{\PreambleInput}{m}{\input{#1}}
+
 
 \RequirePackage{stackengine} % Вертикальные стеки из box-ов
-\RequirePackage{microtype} % Полезные типографические ништячки, по-хорошему требует LuaLaTeX
-\RequirePackage[normalem]{ulem} % Дополнительные варианты форматирования текста, например подчеркивание или зачеркивание
 \RequirePackage{multicol} % Текст в несколько колонок
-\RequirePackage[useregional]{datetime2} % Форматирование дат
+\RequirePackage{microtype} % Полезные типографические ништячки, по-хорошему требует LuaLaTeX
+\RequirePackage{datetime2} % Форматирование дат
+\RequirePackage{datetime2-calc} % Форматирование дат
 
-\renewcommand*{\thefootnote}{\arabic{footnote}} % Сноски нумеруются (арабскими) цифрами
-\setlength{\columnsep}{1cm}
+%\renewcommand*{\thefootnote}{\arabic{footnote}} % Сноски нумеруются (арабскими) цифрами
+%\setlength{\columnsep}{1cm}
 
-\input{macroses/utils/typesetting/mathematics}
-\input{macroses/utils/typesetting/shorthands}
-\input{macroses/utils/typesetting/lists}
+
+%%% Extra options for text formatting, including lists
+%%% TODO: implement ulem macroses via lua-ul
+\DeclareOption{formatting}{%
+  \RequirePackage{enumitem}
+  \RequirePackage{lua-ul}
+  \PreambleInput{macroses/definitions/typesetting/formatting}
+}
+
+%%% Default styles for theorems
+%%% TODO: currently supports only russian
+%%%       should be configurable from lua
+\DeclareOption{theoremes}{%
+  \RequirePackage{amsthm}
+  \RequirePackage{thmtools}
+  \PreambleInput{macroses/definitions/typesetting/mathematics}
+}
+
+%%% macroses for shotrhand
+%%% for example \ie - ''т.е.'', \fe --- ''например'''
+%%% TODO: currently supports only russian
+%%%       should be configurable from lua
+\DeclareOption{shorthand}{%
+  \PreambleInput{macroses/definitions/typesetting/shorthands}
+}
+
+\DeclareOption*{%
+  \PackageWarning{macroses/typesetting}{Unknown option \CurrentOption was used}%
+}
+\ProcessOptions
+
+

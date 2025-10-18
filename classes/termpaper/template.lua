@@ -1,4 +1,4 @@
---- Configuration file containing all necessary information
+--- Default records file containing all necessary information
 --- for LaTeX to build the report according to SE template
 
 local records = {
@@ -14,8 +14,8 @@ local records = {
 }
 
 records.report.title = {
-  ru = [[Прототипирование общего ядра проекта PySATL]],
-  en = [[Prototyping shared kernel for the PySATL project]]
+  ru = [[Очень важная и актуальна работа]],
+  en = [[Very important and actual work]]
 }
 
 -- Report type: one of 'coursework'/'practice'/'production'/'prediploma'/'thesis'
@@ -24,8 +24,8 @@ records.report.type = 'practice'
 records.report.kind = 'experiment'
 -- Author information
 records.author.name = {
-    ru = [[Михайлов Михаил Дмитриевич]],
-    en = [[Mikhailov Mikhail Dmitrievich]]
+    ru = [[Студентов Студент Студентович]],
+    en = [[Studentov Student Studentovich]]
 }
 
 records.author.group = {
@@ -50,8 +50,8 @@ records.author.profile = {
 
 -- Supervisor information
 records.supervisor.name = {
-    ru = [[Гориховский~В.~И.]],
-    en = [[Gorikhovskiy~V.~I.]]
+    ru = [[Научников~Н.~Н.]],
+    en = [[Nauchnickov~N.~N.]]
 }
 
 records.supervisor.position = {

@@ -42,11 +42,7 @@
   includehead
 }
 
-\input{preamble.tex}
-\RequirePackage{macroses/references}
-\RequirePackage{macroses/mathematics}
-\RequirePackage{macroses/typesetting}
-\RequirePackage{macroses/floats}
+\input{tooling/preamble.tex}
 
 \theoremstyle{definition}
 \newtheorem{?}{Задача}

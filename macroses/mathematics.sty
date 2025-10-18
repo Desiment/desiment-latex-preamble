@@ -116,9 +116,9 @@
 \ExplSyntaxOn
 
 % Trick to define PIE commands that can absorbs PIE first and only then produce arguments.
-% Define your command as usual PIE command (so, PIE's aren't expanded or parsed);
+% Define your command as usual command (so, PIE's aren't expanded or parsed);
 % BUT PIE's will be respectevly #1, #2 and #3 (for details see mathcommand docs).
-% Then use this command to allow firstly parse PIEF and only then parse arguments;
+% Then use this command to allow firstly parse PIE and only then parse arguments;
 \NewDocumentCommand{\piefication}{m}{
     \exp_args:Nc\NewCommandCopy{old_\cs_to_str:N#1}{#1}
     \cs_set:cpn{internal_\cs_to_str:N#1:w}{\exp_args:Nc\__mathcommand_absorb_PIE:nw{old_\cs_to_str:N#1}}
@@ -186,7 +186,7 @@
 % \renewmathcommand{\j}{\jmath}
 
 % Bigger operators
-%\sum_{i = 1}^{n}{
+%\sum*[i = 1][n}{
 %   \mleft(....\mright.
 %}
 \ExplSyntaxOn
@@ -208,8 +208,21 @@
 %% Math commands %%
 %%%%%%%%%%%%%%%%%%%
 
-\input{macroses/utils/mathematics/algebra}
-\input{macroses/utils/mathematics/calculus}
-\input{macroses/utils/mathematics/combinatorics}
-\input{macroses/utils/mathematics/foundations}
-\input{macroses/utils/mathematics/probability}
+\IfLuaBooleanT{configuration.mathematics.plugins.algebra.enable}{
+  \input{macroses/definitions/mathematics/algebra}
+}
+\IfLuaBooleanT{configuration.mathematics.plugins.calculus.enable}{
+  \input{macroses/definitions/mathematics/calculus}
+}
+\IfLuaBooleanT{configuration.mathematics.plugins.complexity.enable}{
+  \PackageError{macroses/mathematics}{Complexity macro set is yet to be implemented}{Sorry, wait a little bit}
+}
+\IfLuaBooleanT{configuration.mathematics.plugins.combinatorics.enable}{
+  \input{macroses/definitions/mathematics/combinatorics}
+}
+\IfLuaBooleanT{configuration.mathematics.plugins.foundations.enable}{
+  \input{macroses/definitions/mathematics/foundations}
+}
+\IfLuaBooleanT{configuration.mathematics.plugins.probability.enable}{
+  \input{macroses/definitions/mathematics/probability}
+}

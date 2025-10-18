@@ -1,0 +1,74 @@
+%%% Списки
+\SetEnumitemKey{compact}{topsep=0pt, parsep=0pt, noitemsep}
+
+
+%%%%% Подчеркивания и прочее
+
+\ExplSyntaxOn
+%\uline{}  --- просто подчеркивает текст, синоним \underLine
+%\uline*{} --- проводит последнюю линию до конца, но нужно чтобы стоял \par в конце
+\NewDocumentCommand{\uline}{s +m}{
+    \IfBooleanTF{#1}{
+        \AddToHook{para/end}[UnderlineTillEOL]{\hfill\phantom{.}}
+        \underLine{#2 \par}
+        \RemoveFromHook{para/end}[UnderlineTillEOL]
+    }{\underLine{#2}}
+}
+%\iuline{}  --- тоже самое что и \uline, но абзацный отступ тоже подчеркивается
+%\iuline*{} --- *-версия \iuline, с соответствующим поведением
+\newlength\OldParIndentDim
+\NewDocumentCommand{\iuline}{s +m}{%
+    \setlength{\OldParIndentDim}{\parindent}
+    \setlength{\parindent}{0pt}
+
+    \AddToHook{para/begin}[UnderlineIdentationHook]{\hspace{\OldParIndentDim}}
+    \IfBooleanTF{#1}{\uline*{#2}}{\uline{#2}}
+    \RemoveFromHook{para/begin}[UnderlineIdentationHook]
+
+    \setlength{\parindent}{\OldParIndentDim}
+}
+
+\box_new:N\l_lines_tmp_box
+\cs_new:Npn\count_lines_number:nn#1#2{
+    \vbox_set:Nn\l_lines_tmp_box{#1}
+    \exp_args:No\int_set_eq:NN{#2}{
+        \fp_to_int:n{\dim_ratio:nn{\box_ht:N\l_lines_tmp_box}{\baselineskip} + 0.5}
+    }
+}
+\int_new:N\l_lines_count_int
+\int_new:N\l_lines_target_int
+
+\NewDocumentCommand{\ulines}{m+m}{%
+    \int_set:Nn\l_lines_target_int{#1}
+    \count_lines_number:nn{#2}{\l_lines_count_int}
+    \iuline*{#2} \par
+    \prg_replicate:nn{\int_max:nn{\l_lines_target_int - \l_lines_count_int}{0}}{\noindent \uline{\hfill\phantom{.}} \par}
+}
+
+\ExplSyntaxOff
+
+
+\ExplSyntaxOn
+%\underscoredline[linesize]{main text}[pos]{underscored text}
+\NewDocumentCommand{\underscoredline}{so+mO{c}m}{
+    % Обятально использовать параметр [t]! Чтобы не съезжало посреди текста
+    \IfNoValueTF{#2}{
+        \measureremainder{\whatsleft}
+        \measureremainder{\whatsleft}\begin{minipage}[t]{\whatsleft}
+            #3 \phantom{р}\par %\phantom{р} исользуется чтобы добавить глубину, иначе линия будет наезжать на текст, а так это выглядит хорошо.
+            \noindent\hrule\smallskip
+            \exp_args:Nx\tl_if_eq:nnTF{#4}{l}{\makebox[\linewidth]{\IfBooleanTF{#1}{}{\scriptsize} #5}}{}
+            \exp_args:Nx\tl_if_eq:nnTF{#4}{r}{\hfill\makebox{\IfBooleanTF{#1}{}{\scriptsize}  #5}}{}
+            \exp_args:Nx\tl_if_eq:nnTF{#4}{c}{\centering\makebox[\linewidth]{\IfBooleanTF{#1}{}{\scriptsize} #5}}{}
+        \end{minipage}
+    }{
+        \begin{minipage}[t]{#2}
+            #3 \phantom{р}\par %\phantom{р} исользуется чтобы добавить глубину, иначе линия будет наезжать на текст, а так это выглядит хорошо.
+            \noindent\hrule\smallskip
+            \exp_args:Nx\tl_if_eq:nnTF{#4}{l}{\makebox[\linewidth]{\IfBooleanTF{#1}{}{\scriptsize} #5}}{}
+            \exp_args:Nx\tl_if_eq:nnTF{#4}{r}{\hfill\makebox{\IfBooleanTF{#1}{}{\scriptsize}  #5}}{}
+            \exp_args:Nx\tl_if_eq:nnTF{#4}{c}{\centering\makebox[\linewidth]{\IfBooleanTF{#1}{}{\scriptsize} #5}}{}
+        \end{minipage}
+    }
+}
+\ExplSyntaxOff

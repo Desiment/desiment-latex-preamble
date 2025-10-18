@@ -1,0 +1,24 @@
+\NeedsTeXFormat{LaTeX2e}[2024/11/01]
+\ProvidesPackage{tooling/fontswitch}[2025/10/07 v0.1.0 Font Switch]
+\RequirePackage{xparse}
+
+\NewCommandCopy{\originnewcommand}{\newcommand}
+\NewCommandCopy{\originNeedsTeXFormat}{\NeedsTeXFormat}
+\NewDocumentCommand\ignore{m}{}
+
+% Хотим изменить шрифт во всем документе на X pt; 
+% Для этого мы явно загружаем sizeX.clo, но так как он на такое не рассчитан,
+% и использует \newcommand для определения всяких \small и \Large
+% то у нас \newcommand временно превращается в \renewcommand
+% Отдельное внимание подавлению команды \NeedsTeXFormat, которая требует
+% чтобы код нестандартных размером типа size14.clo выполнялся в преамбуле
+% (а тут он уже внутри документа)
+% P.S. это работает только с extarticle 
+\NewDocumentCommand\SetPageFontSize{m}{
+  \let\NeedsTeXFormat\ignore
+  \let\newcommand\renewcommand
+  \makeatletter\input{size#1.clo}\makeatother
+  \let\newcommand\orignewcommand
+  \let\NeedsTeXFormat\origNeedsTeXFormat
+}
+

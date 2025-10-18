@@ -1,0 +1,35 @@
+% requires:
+%\RequirePackage{xparse}
+%\RequirePackage{tooling/luaboolean}
+
+\NewDocumentCommand\IsLangRU{m}{\LuaBool{termpaper.is_lang_ru('#1')}}
+\NewDocumentCommand\IsThesis{}{\LuaBool{termpaper.is_thesis}}
+\NewDocumentCommand\IsReport{}{\LuaBool{termpaper.is_report}}
+
+\NewDocumentCommand\IsFieldGiven{mm}{\LuaBool{termpaper.is_field_given('#1.#2')}}
+\NewDocumentCommand\TypesetField{mm}{\directlua{tex.sprint(termpaper.typeset('#1.#2'))}}
+
+\NewDocumentCommand\TypesetScientificSupervisor{m}{
+  \IfBoolFlagTF{\IsLangRU{#1}}{Научный руководитель}{Scientific supervisor}:\\
+  \TypesetField{supervisor.position}{#1}\ \TypesetField{supervisor.name}{#1}\\
+}
+
+\NewDocumentCommand\TypesetConsultant{m}{
+  \IfBoolFlagTF{\IsLangRU{#1}}{Консультант}{Consultant}:\\
+  \TypesetField{consultant.position}{#1}\ \TypesetField{consultant.name}{#1}\\
+}
+
+\NewDocumentCommand\TypesetReviewer{m}{
+  \IfBoolFlagTF{\IsLangRU{#1}}{Рецензент}{Reviewer}:\\
+  \TypesetField{reviewer.position}{#1}\ \TypesetField{reviewer.name}{#1}\\
+}
+
+%% Report
+\NewDocumentCommand\TypesetReportType{m}{
+  \TypesetField{report.type.repr}{#1}
+}
+
+\NewDocumentCommand\TypesetReportKind{m}{
+  \TypesetField{report.kind.repr}{#1}
+}
+

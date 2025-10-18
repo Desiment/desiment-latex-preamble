@@ -1,5 +1,61 @@
-\ProvidesPackage{references}[2025/09/13 Utilities for handling references]
+\ProvidesPackage{macroses/references}[2025/09/13 Utilities for handling references]
+\RequirePackage{xparse}
+\RequirePackage{etoolbox}
 
-\input{macroses/utils/references/hyperrefconf}
-\input{macroses/utils/references/biblatexconf}
-%\input{macroses/utils/references/knowledgeconf}
+% Global IF that checks, wheter hyperref was loaded
+\newif\ifref@hyperref@loaded
+% By default hyperref is not loaded
+\ref@hyperref@loadedfalse
+
+\directlua{rcloader = require('tooling/lua/references')}
+
+% Enable hyperref support
+\DeclareOption{hyperref}{
+  \ref@hyperref@loadedtrue%
+  \AtEndOfPackage{%
+	\RequirePackage{hyperref}%
+	\directlua{rcloader.hyperrefsetup(configuration)}%
+	%%% Patch Link Borders
+	\patchcmd{\find@pdflink}{%
+	  /C[\CurrentBorderColor]\fi%
+	}{%
+	  /C[\CurrentBorderColor]\fi /BS <</W 0.1>>%
+	}{}{}%
+  }
+}
+
+% Enable biblatex support
+\DeclareOption{citations}{
+  \unless\ifref@hyperref@loaded%
+	\AtEndOfPackage{\RequirePackage{hyperref}}
+  \fi%
+  \AtEndOfPackage{%
+	\PassOptionsToPackage{\directlua{tex.sprint(rcloader.get_biblatex_options(configuration))}}{biblatex}%
+	\RequirePackage{biblatex}
+	\directlua{rcloader.setupbiblatex(configuration)}%
+  }
+  \ref@hyperref@loadedtrue%
+}
+
+\DeclareOption{indexes}{
+  \unless\ifref@hyperref@loaded%
+	\AtEndOfPackage{\RequirePackage{hyperref}}
+  \fi%
+  \AtEndOfPackage{%
+	\RequirePackage{imakeidx}%
+    \directlua{rcloader.setupimakeidx(configuration)}%
+  }%
+  \ref@hyperref@loadedtrue%
+}
+% Enable knowledge support
+\DeclareOption{knowledge}{
+  \unless\ifref@hyperref@loaded%
+	\AtEndOfPackage{\RequirePackage{hyperref}}
+  \fi%
+  \AtEndOfPackage{\RequirePackage{knowledge}}
+  \ref@hyperref@loadedtrue%
+}
+\ProcessOptions\relax
+%\if\ifref@hyperref@loaded
+%\fi
+\endinput

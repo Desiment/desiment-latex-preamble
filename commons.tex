@@ -1,4 +1,4 @@
-\usepackage{iftex}
+\RequirePackage{iftex}
 %% Разрешить компиляцию только с движком LuaTex
 \makeatletter
 \ifLuaTeX
@@ -17,18 +17,19 @@
 %% Для русификации достаточно подключить пакет fontspec и
 %% выбрать Unicode шрифт в котором есть кириллические глифы. Ниже
 %% основным шрифтом выбирается Unicode версия шрифта Computer Modern с заcечками
-\usepackage{fontspec}
+\RequirePackage{fontspec}
 \setmainfont{CMU Serif}
 \setsansfont{CMU Sans Serif}
 \setmonofont{CMU Typewriter Text}
 
 %% В LuaLaTeX альтернативой известного пакета babel является пакет polyglossia.
 %% Теперь у нас будут переносы слов
-\usepackage{polyglossia}
+\RequirePackage{polyglossia}
 \setdefaultlanguage{russian}
 \setotherlanguage{english}
 
-\usepackage[autostyle]{csquotes} % Правильные кавычки в зависимости от языка
+\RequirePackage{lineno}
+\RequirePackage[autostyle]{csquotes} % Правильные кавычки в зависимости от языка
 
 % ToDo:
 % [] MathNote   : \tikzmatrix 
@@ -37,15 +38,33 @@
 % [] Fix hidding enviroment
 
 %Отключить предупреждения об кастномной использовании пакетов "You have requested package..."
-\usepackage{silence}
-\WarningFilter{latex}{You have requested package}
+%\usepackage{silence}
+%\WarningFilter{latex}{You have requested package}
 
-\usepackage{xparse}
-%\usepackage{configuration/floats}
-%\usepackage{configuration/layout}
-%\usepackage{configuration/references}
-%\usepackage{configuration/mathematics}
+\RequirePackage{xparse}
+\RequirePackage{luacode}
 
-\sloppy
-% Окружения для набора задач
-%\input{configuration/teaching/preamble-common}
+%% Macroses for manipulation lua booleans in xparse-style
+\RequirePackage{tooling/luaboolean}
+
+%%% Load configuration
+\directlua{configuration = require('tooling/lua/loader').load('tooling/lua/configuration')}
+
+%%% Load custom macroses
+\IfLuaBooleanT{configuration.mathematics.enable}{
+  \RequirePackage{macroses/mathematics}
+}
+\IfLuaBooleanT{configuration.typesetting.enable}{
+  \RequirePackage{macroses/typesetting}
+}
+\IfLuaBooleanT{configuration.floats.enable}{
+  \RequirePackage{macroses/floats}
+}
+\IfLuaBooleanT{configuration.references.enable}{
+  \RequirePackage[hyperref, citations, indexes]{macroses/references}
+}
+
+%\PreambleLoadPackages
+%\PreambleDeclareMacroses
+
+% \sloppy
