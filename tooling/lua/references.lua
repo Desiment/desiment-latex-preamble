@@ -45,31 +45,32 @@ function ReferencesModuleLoader.setupimakeidx(config)
     local indexes_conf = config.references.indexes
     
     if indexes_conf.enable then
-        tex.sprint("\\makeindex")
-        
-        for _, idx in ipairs(indexes_conf.list) do
-            if idx.name then
-                -- Named index
-                local options = {}
-                if idx.columns then table.insert(options, "columns=" .. tostring(idx.columns)) end
-                if idx.columnsep then table.insert(options, "columnsep=" .. idx.columnsep) end
-                if idx.columnseprule then table.insert(options, "columnseprule") end
-                if idx.intoc ~= nil then table.insert(options, "intoc=" .. tostring(idx.intoc)) end
-                
-                local options_str = table.concat(options, ",")
-                if options_str ~= "" then
-                    tex.sprint(string.format("\\makeindex[name=%s, title=%s, %s]", idx.name, idx.title, options_str))
-                else
-                    tex.sprint(string.format("\\makeindex[name=%s, title=%s]", idx.name, idx.title))
-                end
-                
-                -- Print command for named index
-                tex.sprint(string.format("\\NewDocumentCommand\\printindex%s{}{\\printindex[%s]}", idx.name, idx.name))
-            else
-                -- Default index
-                tex.sprint(string.format("\\renewcommand\\indexname{%s}", idx.title))
-            end
-        end
+		for _, idx in ipairs(indexes_conf.list) do
+		  -- Named index
+		  local options = {}
+		  if idx.columns then table.insert(options, "columns=" .. tostring(idx.columns)) end
+		  if idx.columnsep then table.insert(options, "columnsep=" .. idx.columnsep) end
+		  if idx.columnseprule then table.insert(options, "columnseprule") end
+		  if idx.intoc ~= nil then table.insert(options, "intoc=" .. tostring(idx.intoc)) end
+		  
+		  local options_str = table.concat(options, ",")
+		  if options_str ~= "" then
+			  if idx.name then
+				  tex.sprint(string.format("\\makeindex[name=%s, title={%s}, %s]", idx.name, idx.title, options_str))
+			  else
+				  tex.sprint(string.format("\\makeindex[title={%s}, %s]", idx.title, options_str))
+			  end
+		  else
+			  if idx.name then
+				tex.sprint(string.format("\\makeindex[name=%s, title={%s}]", idx.name, idx.title))
+			  else
+				tex.sprint(string.format("\\makeindex[title={%s}]", idx.title))
+			  end
+		  end
+		  
+		  -- Print command for named index
+		  tex.sprint(string.format("\\NewDocumentCommand\\printindex%s{}{\\printindex[%s]}", idx.name, idx.name))
+		end
     end
 end
 
@@ -93,7 +94,6 @@ function ReferencesModuleLoader.setupbiblatex(config)
             end
         end
 		macro = macro .. "}}"
-		print(macro)
         tex.sprint(macro)
     end
     
@@ -116,6 +116,10 @@ function ReferencesModuleLoader.setupbiblatex(config)
 							  "]}{\\printbibliography["..bibopts..", #1]}}")
         end
     end
+end
+
+function ReferencesModuleLoader.get_imakeidx_options(config)
+	return table.concat(config.references.indexes.build, ", ")
 end
 
 function ReferencesModuleLoader.get_biblatex_options(config)

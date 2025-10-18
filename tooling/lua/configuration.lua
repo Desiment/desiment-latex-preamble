@@ -96,6 +96,8 @@ configuration.references = {
     indexes = {
         -- Enable index generation
         enable = true,
+		-- imakeidx options
+		build = {'makeindex'},
         -- Configure individual indexes
         list = {
 			-- Symbol index
@@ -111,7 +113,7 @@ configuration.references = {
 			-- Main subject index
             { 
 			  name = nil,
-			  title = 'Индекс',
+			  title = 'Предметный указатель',
 			  intoc = true,
 			}                  
         }

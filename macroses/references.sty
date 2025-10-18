@@ -42,6 +42,7 @@
 	\AtEndOfPackage{\RequirePackage{hyperref}}
   \fi%
   \AtEndOfPackage{%
+	\PassOptionsToPackage{\directlua{tex.sprint(rcloader.get_imakeidx_options(configuration))}}{imakeidx}%
 	\RequirePackage{imakeidx}%
     \directlua{rcloader.setupimakeidx(configuration)}%
   }%
