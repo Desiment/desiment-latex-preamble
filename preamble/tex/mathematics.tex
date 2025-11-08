@@ -1,0 +1,21 @@
+% AMS packages
+
+\RequirePackage{xamsmath}
+\IfLuaBooleanT{configuration.mathematics.plugins.algebra.enable}{
+  \input{packages/xamsmath/plugins/algebra}
+}
+\IfLuaBooleanT{configuration.mathematics.plugins.calculus.enable}{
+  \input{packages/xamsmath/plugins/calculus}
+}
+\IfLuaBooleanT{configuration.mathematics.plugins.complexity.enable}{
+  \PackageError{macroses/mathematics}{Complexity macro set is yet to be implemented}{Sorry, wait a little bit}
+}
+\IfLuaBooleanT{configuration.mathematics.plugins.combinatorics.enable}{
+  \input{packages/xamsmath/plugins/combinatorics}
+}
+\IfLuaBooleanT{configuration.mathematics.plugins.foundations.enable}{
+  \input{packages/xamsmath/plugins/foundations}
+}
+\IfLuaBooleanT{configuration.mathematics.plugins.probability.enable}{
+  \input{packages/xamsmath/plugins/probability}
+}% 

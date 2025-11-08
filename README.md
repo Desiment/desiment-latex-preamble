@@ -3,6 +3,10 @@
 
 ## Macroses
 
+ToDo:
+- [] typst-like tables
+- [] plant-uml support
+-
 
 ## Classes
 ```

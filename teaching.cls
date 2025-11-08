@@ -42,7 +42,7 @@
   includehead
 }
 
-\input{tooling/preamble.tex}
+\input{tooling/preamble/commons.tex}
 
 \theoremstyle{definition}
 \newtheorem{?}{Задача}
@@ -63,8 +63,6 @@
 
 \RequirePackage{fancyhdr}
 \RequirePackage{ifthen}
-
-
 
 \newcounter{boxlblcounter}
 \newcommand{\task}[1]{\fbox{\begin{minipage}{4em}\centering\it #1\end{minipage}}}

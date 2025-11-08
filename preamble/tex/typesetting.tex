@@ -1,0 +1,69 @@
+\RequirePackage{stackengine} % Create vertically stacked boxes
+\RequirePackage{multicol}    % Switching between signle/multi-column format
+\RequirePackage{microtype} 	 % Typography enhancment
+
+\RequirePackage{enumitem}
+\SetEnumitemKey{compact}{topsep=0pt, parsep=0pt, noitemsep}
+
+\NewDocumentCommand{\DeclareTheorems}{}{%
+  \directlua{for _, env in configuration.typesetting.theorems.enviroments do tex.sprint('\\NewDocumentTheorem\{' ou '\}\{' ou '\}') end }
+  %\{'..env.envname..'\}\{' ..env.name.. '\}[' .. loader.parse_kv_opts(env.options) .. ']') end}
+}
+
+\ExplSyntaxOn
+\IfLuaBooleanT{configuration.typesetting.shortcuts}{
+  \cs_set:Npn\__make_sc_name_command:n#1{
+	\seq_set_split:Nnn\l_csname_parts_seq{~}{#1}
+	\str_set_eq:NN\l_csname_str\c_empty_tl
+	\exp_args:Nx\clist_map_inline:nn{\seq_use:Nnnn\l_csname_parts_seq{,}{,}{,}}{\exp_args:NNx\str_put_right:Nn\l_csname_str{\str_uppercase:f{\tl_head:n{##1}}\str_lowercase:f{\tl_tail:n{##1}}}}
+	\exp_args:NNf\exp_args:Nc\NewDocumentCommand{\str_use:N\l_csname_str}{}{#1}
+  }
+  \NewDocumentCommand\DefineScName{mo}{
+	\IfNoValueTF{#2}{\__make_sc_name_command:n#1}{\exp_args:Nc\NewDocumentCommand{#1}{\textsc{#2}}}
+  }
+  \NewDocumentCommand\DefineScNames{ >{\SplitList {,}} m}{
+	\ProcessList{#1}{\__make_sc_name_command:n}
+  }
+}
+
+\IfLuaBooleanT{configuration.typesetting.formatting.ulem}{
+  % TODO: add options for lualem
+  % TODO: make ulem substitution
+  \RequirePackage{packages/extras/lualem}
+}
+
+\IfLuaBooleanT{configuration.typesetting.formatting.todo}{
+  % TODO: make possible to choose engine for todo:
+  % todonotes uses tikz, so it becomes slow when there are
+  % a lot of todos
+
+  % TODO: make todonotes configurable
+
+  % TODO: add russian translation for todonotes
+  % maybe do as PR into https://github.com/henrikmidtiby/todonotes
+  \RequirePackage{todonotes}
+  \IfLuaBooleanT{configuration.assets.externalize}{
+	\NewCommandCopy\LaTeXtodo\todo
+	\RenewDocumentCommand{\todo}{om}{
+	  \bgroup\mmzset{disable}\LaTeXtodo[#1]{#2}\egroup
+	}
+  }
+}
+
+
+\IfLuaBooleanT{configuration.typesetting.theorems}{
+  \RequirePackage{amsthm}
+  \RequirePackage{mdframed}
+  \RequirePackage{keytheorems}
+
+  %% thmstyle must provide \NewDocumentTheorem command
+  \IfLuaStrEqualT{configuration.typesetting.theorems.thmstyle}{'plain'}{
+	\input{themes/theorems/plain}
+  }
+  \IfLuaStrEqualT{configuration.typesetting.theorems.thmstyle}{'framed'}{
+	\input{themes/theorems/framed}
+  }
+  \directlua{loader.DeclareTheorems(configuration)}
+}
+
+\ExplSyntaxOff

@@ -1,0 +1,93 @@
+% General packages for floats
+\RequirePackage{newfloat}
+\RequirePackage{caption}
+\RequirePackage{subcaption}
+\RequirePackage{wrapfig2}
+
+% NOTE: using wrapfig2 instead of wrapfig will cause newfloat package to ingore wraped enviroments. 
+% Since I add only listing enviroment, I think that's fine, It is hard to imagine where one can 
+% possibly need wraplisting image
+
+%%%%%%%%
+% Images
+% Standard bundle for images
+\RequirePackage{graphics}
+\RequirePackage{adjustbox}
+\RequirePackage{luacolor}
+
+% Insert non-standard formats
+\RequirePackage{pdfpages}
+\RequirePackage{svg}
+
+% TiKZ and PGF graphics
+\RequirePackage{pgfplots}
+\RequirePackage{tikz}
+
+%%%%%%%%
+% Tables
+\PassOptionsToPackage{table}{xcolor}
+
+\RequirePackage{booktabs}
+\RequirePackage{multirow}
+\RequirePackage{colortbl}
+\RequirePackage{makecell}
+\RequirePackage{longtable}
+
+
+%%%%%%%%%%
+% Listings
+\RequirePackage[newfloat]{minted}
+
+
+% TODO: automatize?
+% I guess I will, when will add custom float for UML-diagrams or something else
+%\directlua{ffloat.loader.setup.images(configuration)}%
+%\directlua{ffloat.loader.setup.tables(configuration)}%
+%\directlua{ffloat.loader.setup.listings(configuration)}%
+
+\IfLuaBooleanT{configuration.floats.shortcuts}{
+  \NewDocumentCommand{\InsertImage}{om}{
+	\directlua{tex.sprint(ffloat.make.image(#2, luakeys.parse(#1)))}
+  }
+  \NewDocumentCommand{\InsertTable}{om}{
+	\directlua{tex.sprint(ffloat.make.table(#2, luakeys.parse(#1)))}
+  }
+  \NewDocumentCommand{\InsertListing}{om}{
+	\directlua{tex.sprint(ffloat.make.listing(#2, luakeys.parse(#1)))}
+  }
+}
+
+
+% `tikz-cd` is necessary to draw commutative diagrams.
+%\RequirePackage{tikz-cd}
+%\RequirePackage{quiver}
+
+
+%%%% Graphics
+
+%\DeclareGraphicsExtensions{.pdf,.png,.jpg}
+
+
+%\newlength{\figurewidth}
+%\setlength{\figurewidth}{0.9\linewidth}
+%\newlength{\wrapfigurewidth}
+%\setlength{\wrapfigurewidth}{0.4\linewidth}
+
+
+
+% Запретим minted подсвечивать по его мнению лексические ошибки
+%\AtBeginEnvironment{minted}{\dontdofcolorbox}
+%\def\dontdofcolorbox{\renewcommand\fcolorbox[4][]{##4}}
+
+% Общая настройка
+\DeclareCaptionFormat{listing}{
+    \hspace{15pt}#1#2#3
+}
+\SetupFloatingEnvironment{listing}{name=Листинг}
+\SetupFloatingEnvironment{listing}{listname=Листинги}
+\captionsetup[listing]{
+    format=listing,
+    margin=0pt,
+}
+
+%\RequirePackage{memoize}

@@ -1,0 +1,3 @@
+[submodule "packages/xamsmath"]
+	path = packages/xamsmath
+	url = https://github.com/Desiment/xamsmath.git

@@ -1,0 +1,11 @@
+\directlua{refloader = require('preamble/lua/references')}
+
+\PassOptionsToPackage{\directlua{tex.sprint(refloader.get_biblatex_options(configuration))}}{biblatex}%
+\PassOptionsToPackage{\directlua{tex.sprint(refloader.get_imakeidx_options(configuration))}}{imakeidx}%
+\RequirePackage{hyperref}%
+\RequirePackage{biblatex}%
+\RequirePackage{imakeidx}%
+
+\directlua{refloader.hyperrefsetup(configuration)}%
+\directlua{refloader.setupbiblatex(configuration)}%
+\directlua{refloader.setupimakeidx(configuration)}%

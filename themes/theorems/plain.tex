@@ -1,0 +1,11 @@
+\ExplSyntaxOn
+\tl_new:N\l_env_name_tl
+\tl_new:N\l_framed_env_name_tl
+
+\NewDocumentCommand{\NewDocumentTheorem}{mmd[]}{
+  \tl_set:Nn\l_env_name_tl{\str_lowercase:n #1}
+  \tl_set:Nx\l_framed_env_name_tl{\str_uppercase:f{\tl_head:N\l_env_name_tl}\tl_tail:N\l_env_name_tl}
+  \newkeytheorem{\tl_use:N\l_env_name_tl}[name=#2, #3]
+  \newkeytheorem{\tl_use:N\l_env_name_tl*}[name=#2, numbered=false, #3]
+}
+\ExplSyntaxOff

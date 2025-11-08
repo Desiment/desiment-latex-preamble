@@ -9,7 +9,7 @@
 
 
 \RequirePackage{xparse}
-\RequirePackage{tooling/fontswitch}
+\RequirePackage{packages/extras/fontswitch}
 % Если используется опция 14pt то нужно несколько хаков
 \DeclareOption{14pt}{
     % во-первых, класс наследуется от extarticle
@@ -24,12 +24,10 @@
 \LoadClass[a4paper,\termpaper@fontsize]{\termpaper@baseclass}
 
 \RequirePackage[a4paper]{geometry}
-\RequirePackage{fancyhdr}
-\RequirePackage{setspace}
-\setdisplayskipstretch{1.0}
 
 
+\input{tooling/preamble/commons.tex}
 \directlua{termpaper = require('classes/termpaper/recordsloader').load()}
-\input{tooling/preamble.tex}
 \input{classes/termpaper/title/title.tex}
+\setdisplayskipstretch{1.0}
 

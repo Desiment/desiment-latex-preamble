@@ -32,7 +32,7 @@
 \RequirePackage[autostyle]{csquotes} % Правильные кавычки в зависимости от языка
 
 % ToDo:
-% [] MathNote   : \tikzmatrix 
+% [] MathNote   : \tikzmatrix
 % [] MathNote   : smashable \sum* commands
 % [] Layout     : Define colors
 % [] Fix hidding enviroment
@@ -42,29 +42,26 @@
 %\WarningFilter{latex}{You have requested package}
 
 \RequirePackage{xparse}
-\RequirePackage{luacode}
+\RequirePackage{etoolbox}
 
 %% Macroses for manipulation lua booleans in xparse-style
-\RequirePackage{tooling/luaboolean}
+\RequirePackage{luacode}
+\RequirePackage{packages/extras/luaboolean}
 
 %%% Load configuration
-\directlua{configuration = require('tooling/lua/loader').load('tooling/lua/configuration')}
+\directlua{loader = require('preamble/lua/loader')}
+\directlua{configuration = loader.configuration(); for k, v in pairs(configuration) do print(k, v) end}
 
 %%% Load custom macroses
 \IfLuaBooleanT{configuration.mathematics.enable}{
-  \RequirePackage{macroses/mathematics}
+  \input{preamble/tex/mathematics}
 }
 \IfLuaBooleanT{configuration.typesetting.enable}{
-  \RequirePackage{macroses/typesetting}
+  \input{preamble/tex/typesetting}
 }
 \IfLuaBooleanT{configuration.floats.enable}{
-  \RequirePackage{macroses/floats}
+  \input{preamble/tex/floats}
 }
 \IfLuaBooleanT{configuration.references.enable}{
-  \RequirePackage[hyperref, citations, indexes]{macroses/references}
+  \input{preamble/tex/references}
 }
-
-%\PreambleLoadPackages
-%\PreambleDeclareMacroses
-
-% \sloppy

@@ -22,6 +22,12 @@
 \NewDocumentCommand\IfLuaBooleanF{mm}{\IfLuaBooleanTF{#1}{}{#2}}
 \NewDocumentCommand\IfLuaBooleanT{mm}{\IfLuaBooleanTF{#1}{#2}{}}
 
+\NewDocumentCommand\IfLuaStrEqualTF{mmmm}{
+  \exp_args:Nf\IfBooleanTF{\LuaBool{#1==#2}}{#3}{#4}
+}
+\NewDocumentCommand\IfLuaStrEqualT{mmm}{\IfLuaStrEqualTF{#1}{#2}{#3}{}}
+\NewDocumentCommand\IfLuaStrEqualF{mmm}{\IfLuaStrEqualTF{#1}{#2}{}{#3}}
+
 % \IfBooleanTF-like commands do not expand their argument.
 % Let's define appropriate variants of them which do expansion
 \NewDocumentCommand\IfBoolFlagT{mm}{

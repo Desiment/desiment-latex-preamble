@@ -26,6 +26,9 @@ configuration.assets = {
     -- Enable custom LaTeX macros for quick insertion of figures/tables/etc.
     shortcuts = true,
     -- Enable externalization of assets (caching processed versions)
+    -- 	For externalization 'memoize' package is used. Note that this
+	-- 	requires quite modern LaTeX version, as well as some external
+	--- dependicies, like Perl and PDF::API2 library
     externalize = true,
     -- Asset type configurations:
     -- 'keep' - memoize puts files in the same directory as source
@@ -108,7 +111,6 @@ configuration.references = {
 			  --columns = 2,
 			  --columnsep = '15pt',
 			  --columnseprule = true,
-			  --options = nil,
 			},  
 			-- Main subject index
             { 
@@ -118,13 +120,13 @@ configuration.references = {
 			}                  
         }
     },
-    -- Knowledge graph configuration (knowledge package)
-    knowledge = {
+    -- Knowledge configuration (knowledge package)
+    -- knowledge = {
         -- Enable knowledge graph functionality
-        enable = true,
+        -- enable = true,
         -- Configuration file for knowledge package
-        config = '.knowledgerc.tex'
-    }
+        -- config = '.knowledgerc.tex'
+    -- }
 }
 
 -- Float environment configuration
@@ -136,8 +138,10 @@ configuration.floats = {
     images = {
 		-- Enable quiver package for commutative diagrams
 		quiver = 'enabled', -- alternative is 'draft' or 'disabled'
-		-- Enable drawio package for draw.io diagram integration  
-		drawio = 'enabled', -- alternative is 'draft' or 'disabled'
+		-- TODO: Enable drawio package for draw.io diagram integration  
+		-- drawio = 'enabled', -- alternative is 'draft' or 'disabled'
+		
+		-- Default caption position 
 		caption = 'below',
 		-- Default width ratio to \linewidth for regular figures (0.0-1.0)
         figurewidth = 0.9,
@@ -172,28 +176,35 @@ configuration.floats = {
 configuration.typesetting = {
     -- Enable custom typesetting macros
     enable = true,
+	
     -- Text shortcut configuration
-    shortcuts = {
-        -- Enable common text shortcuts (e.g., \ie, \eg, \etc)
-        enable = true,
-        -- Enable caption-related shortcuts
-        caption = true,
-        -- List of technical terms to create \textsc{} commands for
-        -- Generates commands like \Python → \textsc{Python}
-        names = { 'Python', 'R', 'Julia' }
-    },
+	shortcuts = true, 
+
+	-- Formatting features
 	formatting = {
-	  todos = '',
-	  liststyles = true,
-	  underlines = true,
+	  todo = true,
+	  ulem = true,
 	},
     -- Theorem and proof environment configuration
     theorems = {
         -- Enable theorem-like environments (theorem, lemma, proof, etc.)
         enable = true,
-		examples = true,
-		problems = true,
-		
+		--- Theorem naming style
+		--- plain: 
+		---		theorem - numbered theorem
+		---		theorem* - unnumbered theorem
+		--- framed: 
+		---		Theorem - numbered theorem, framed
+		---		Theorem* - unnumbered theorem, framed
+		---		theorem - numbered theorem, not framed
+		---		theorem* - unnumbered theorem, not framed
+		thmstyle = 'framed',
+		enviroments = {
+		  {envname = 'theorem', name = 'Теорема'},
+		  {envname = 'lemma', name = 'Лемма'},
+		  {envname = 'proposition', name = 'Предложение'},
+		  {envname = 'definition', name = 'Определение'},
+		}
     }
 }
 
@@ -208,40 +219,32 @@ configuration.mathematics = {
         -- Algebra plugin: groups, rings, fields, linear algebra
         algebra = {
             enable = true,          -- Enable algebra macros
-            knowledgify = true,     -- Generate knowledge graph entries
-            indexify = false,       -- Add to index automatically
-            opts = { 
-                -- Redefine kernel and image commands to preferred versions
-                redefine_ker_im = true 
-            }
+            --knowledgify = true,     -- Generate knowledge graph entries
+            --indexify = false,       -- Add to index automatically
         },
         -- Calculus plugin: limits, derivatives, integrals
         calculus = {
             enable = true,
-            knowledgify = true,
-            indexify = false
+            --knowledgify = true,
+            --indexify = false
         },
         -- Combinatorics plugin: combinations, permutations, graphs
         combinatorics = {
             enable = true,
-            knowledgify = true,
-            indexify = false
+            --knowledgify = true,
+            --indexify = false
         },
         -- Probability plugin: distributions, expectations, random variables
         probability = {
             enable = true,
-            knowledgify = true,
-            indexify = false,
-            opts = {
-                -- Bracket style for functional notation: P(X=x) vs P[X=x]
-                functional_bracket = '()'
-            }
+            --knowledgify = true,
+            --indexify = false,
         },
         -- Foundations plugin: set theory, logic, category theory
         foundations = {
             enable = true,
-            knowledgify = true,
-            indexify = false
+            --knowledgify = true,
+            --indexify = false
         },
         -- Complexity plugin: Big-O notation, complexity classes
         complexity = {
