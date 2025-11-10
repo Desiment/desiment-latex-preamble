@@ -45,7 +45,11 @@
   \IfLuaBooleanT{configuration.assets.externalize}{
 	\NewCommandCopy\LaTeXtodo\todo
 	\RenewDocumentCommand{\todo}{om}{
-	  \bgroup\mmzset{disable}\LaTeXtodo[#1]{#2}\egroup
+    \IfNoValueTF{#1}{
+      \bgroup\mmzset{disable}\LaTeXtodo{#2}\egroup
+    }{
+      \bgroup\mmzset{disable}\LaTeXtodo[#1]{#2}\egroup
+    }
 	}
   }
 }
